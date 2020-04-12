@@ -43,7 +43,7 @@ class HomePageRoute extends State<HomePage> {
 
   Future<List<Country>> _getAllAffectedCountries() async {
     List<Country> list;
-    var url = 'http://10.0.2.2:4000/stats/all';
+    var url = 'https://covid-19-be-flask.herokuapp.com/stats/all';
     var response = await http.get(
       Uri.encodeFull(url),
     );

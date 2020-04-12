@@ -10,7 +10,7 @@ import '../models/province.dart';
 import '../models/countries.dart';
 
 class CountryPage extends StatefulWidget {
-  final Countries data;
+  final data;
   
   CountryPage({
     Key key,
@@ -74,7 +74,7 @@ class CountryPageRoute extends State<CountryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Country'),
+        title: Text('${widget.data.name}'),
       ),
       body: FutureBuilder(
         future: _getAllAffectedProvinces(widget.data),

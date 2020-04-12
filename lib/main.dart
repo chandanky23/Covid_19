@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'COVID 19 - A Pandemic',
       theme: ThemeData(
-        primaryColor: Colors.redAccent
+        primaryColor: Colors.black
       ),
       initialRoute: '/',
       onGenerateRoute: RouteGenerator.generatorRoute,

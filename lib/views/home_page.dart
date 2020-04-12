@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:covid_19/models/country.dart';
 import 'package:covid_19/components/list_view.dart';
@@ -121,15 +122,22 @@ class HomePageRoute extends State<HomePage> {
     return listViewWidget(filteredCountryData);
   }
 
+  Future refreshApp() async {
+    await Future.delayed(Duration(seconds: 2));
+    _getAllAffectedCountries();
+  }
+
   Widget build(BuildContext context) {
-    // SystemChrome.setPreferredOrientations(
-    //     [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     return new Scaffold(
       appBar: _buildAppBar(context),
-      body: Container(
-          child: countryData.length != 0
-              ? _filterList()
-              : Container(child: Center(child: Spinner()))),
+      body: RefreshIndicator(
+        child: Container(
+            child: countryData.length != 0
+                ? _filterList()
+                : Container(child: Center(child: Spinner()))
+        ),
+        onRefresh: refreshApp,
+      ),
       resizeToAvoidBottomPadding: false,
     );
   }

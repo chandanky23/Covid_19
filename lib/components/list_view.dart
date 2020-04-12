@@ -8,7 +8,7 @@ Widget listViewWidget(country) {
       ? emptyList("Oops! no matching country found")
       : Container(
           child: ListView.builder(
-              itemCount: country.length,
+              itemCount: country?.length,
               padding: const EdgeInsets.all(2.0),
               itemBuilder: (BuildContext context, int position) {
                 return Container(

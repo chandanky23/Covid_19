@@ -1,94 +1,79 @@
 class Country {
-  Cases cases;
+  int active;
+  int cases;
+  int updated;
   String country;
-  String day;
-  Deaths deaths;
-  Tests tests;
-  String time;
-  String flag;
+  CountryInfo countryInfo;
+  int todayCases;
+  int deaths;
+  int todayDeaths;
+  int recovered;
+  int critical;
+  int casesPerOneMillion;
+  int deathsPerOneMillion;
+  int tests;
+  int testsPerOneMillion;
 
   Country(
     {
-      this.country,
-      this.day,
+      this.active,
       this.cases,
+      this.updated,
+      this.country,
+      this.countryInfo,
+      this.todayCases,
       this.deaths,
+      this.todayDeaths,
+      this.recovered,
+      this.critical,
+      this.casesPerOneMillion,
+      this.deathsPerOneMillion,
       this.tests,
-      this.time,
-      this.flag
+      this.testsPerOneMillion
     }
   );
 
   factory Country.fromJson(Map<String, dynamic> json) {
-    return Country(
-      cases: Cases.fromJson(json['cases']),
-      country: json['country'],
-      day: json['day'],
-      deaths: Deaths.fromJson(json['deaths']),
-      tests: Tests.fromJson(json['tests']),
-      time: json['time'],
-      flag: json['flag']
-    );
-  }
-}
-
-class Cases{
-  int active;
-  int critical;
-  String newcases; // new is a reserved keyword and hence using newcases instead of new
-  int recovered;
-  int total;
-
-  Cases(
-    {
-      this.active,
-      this.critical,
-      this.newcases,
-      this.recovered,
-      this.total
-    }
-  );
-
-  factory Cases.fromJson(Map<String, dynamic> json) {
-    return Cases(
+    return Country (
       active: json['active'],
-      critical: json['critical'],
-      newcases: json['new'],
+      cases: json['cases'],
+      updated: json['updated'],
+      country: json['country'],
+      countryInfo: CountryInfo.fromJson(json['countryInfo']),
+      todayCases: json['todayCases'],
+      deaths: json['deaths'],
+      todayDeaths: json['todayDeaths'],
       recovered: json['recovered'],
-      total: json['total']
+      critical: json['critical'],
+      casesPerOneMillion: json['casesPerOneMillion'],
+      deathsPerOneMillion: json['deathsPerOneMillion'],
+      tests: json['tests'],
+      testsPerOneMillion: json['testsPerOneMillion']
     );
   }
 }
 
-class Tests {
-  int total;
+class CountryInfo {
+  int id;
+  String iso2;
+  String iso3;
+  String flag;
 
-  Tests(
+  CountryInfo(
     {
-      this.total
-    }
-  );
-  factory Tests.fromJson(Map<String, dynamic> json) {
-    return Tests(
-      total: json['total']
-    );
-  }
-}
-
-class Deaths {
-  String newdeaths;
-  int total;
-  Deaths(
-    {
-      this.newdeaths,
-      this.total
+      this.id,
+      this.iso2,
+      this.iso3,
+      this.flag
     }
   );
 
-  factory Deaths.fromJson(Map<String, dynamic> json) {
-    return Deaths(
-      newdeaths: json['new'],
-      total: json['total']
+  factory CountryInfo.fromJson(Map<String, dynamic> json) {
+    return CountryInfo(
+      flag: json['flag'],
+      id: json['_id'],
+      iso2: json['iso2'],
+      iso3: json['iso3'],
     );
   }
 }

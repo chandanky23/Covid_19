@@ -2,6 +2,9 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:covid_19/models/country.dart';
 import 'package:covid_19/components/list_view.dart';
+import 'package:covid_19/components/spinner.dart';
+// import 'package:covid_19/components/empty_list.dart';
+// import 'package:flutter/services.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
@@ -33,14 +36,15 @@ class HomePageRoute extends State<HomePage> {
     });
   }
 
-
   void _getAllAffectedCountries() async {
     List list = new List();
     final response =
         await dio.get('https://covid-19-be-flask.herokuapp.com/stats/all');
-    var data = response.data;
-    List rest = data as List;
-    list = rest.map<Country>((json) => Country.fromJson(json)).toList();
+    if (response.statusCode == 200) {
+      var data = response.data;
+      List rest = data as List;
+      list = rest.map<Country>((json) => Country.fromJson(json)).toList();
+    }
     setState(() {
       countryData = list;
       filteredCountryData = list;
@@ -61,22 +65,17 @@ class HomePageRoute extends State<HomePage> {
           cursorColor: Colors.white,
           controller: _filter,
           decoration: new InputDecoration(
-              prefixIcon: new Icon(Icons.search, color: Colors.white,
-            ),
-            hintText: 'Country names...',
-            hintStyle: new TextStyle(
-              color: Colors.white54,
-            ),
-            border: new UnderlineInputBorder(
-              borderSide: new BorderSide(
-                color: Colors.white
-              )
-            )
-          ),
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 20.0
-          ),
+              prefixIcon: new Icon(
+                Icons.search,
+                color: Colors.white,
+              ),
+              hintText: 'Country names...',
+              hintStyle: new TextStyle(
+                color: Colors.white54,
+              ),
+              border: new UnderlineInputBorder(
+                  borderSide: new BorderSide(color: Colors.white))),
+          style: TextStyle(color: Colors.white, fontSize: 20.0),
         );
       } else {
         this._searchIcon = new Icon(Icons.search);
@@ -91,20 +90,18 @@ class HomePageRoute extends State<HomePage> {
     return new AppBar(
       // centerTitle: true,
       title: _appBarTitle,
-      leading: new Icon(Icons.language),
+      // leading: new Icon(Icons.language),
       actions: <Widget>[
         Padding(
           padding: EdgeInsets.only(right: 20.0),
           child: GestureDetector(
-            child: new IconButton(icon: _searchIcon, onPressed: _searchPressed)
-          ),
+              child:
+                  new IconButton(icon: _searchIcon, onPressed: _searchPressed)),
         ),
-        Padding(
-          padding: EdgeInsets.only(right: 20.0),
-          child: GestureDetector(
-            child: Icon(Icons.sort)
-          ),
-        )
+        // Padding(
+        //   padding: EdgeInsets.only(right: 20.0),
+        //   child: GestureDetector(child: Icon(Icons.sort)),
+        // )
       ],
     );
   }
@@ -125,11 +122,14 @@ class HomePageRoute extends State<HomePage> {
   }
 
   Widget build(BuildContext context) {
-    return Scaffold(
+    // SystemChrome.setPreferredOrientations(
+    //     [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+    return new Scaffold(
       appBar: _buildAppBar(context),
       body: Container(
-        child: _filterList(),
-      ),
+          child: countryData.length != 0
+              ? _filterList()
+              : Container(child: Center(child: Spinner()))),
       resizeToAvoidBottomPadding: false,
     );
   }

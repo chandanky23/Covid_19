@@ -2,9 +2,10 @@ import './image_thumbnail.dart';
 import 'package:flutter/material.dart';
 import './empty_list.dart';
 
+@override
 Widget listViewWidget(country) {
   return country.length == 0
-      ? emptyList()
+      ? emptyList("Oops! no matching country found")
       : Container(
           child: ListView.builder(
               itemCount: country.length,

@@ -16,9 +16,6 @@ class ImageThumbnail extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         constraints: BoxConstraints.expand(height: 30.0, width: 50.0),
-        decoration: BoxDecoration(
-          color: Colors.grey,
-        ),
         child: _imageCode != 'null'
             ? FadeInImage.assetNetwork(
                 placeholder: 'assets/images/loading_fingers.gif',

@@ -12,7 +12,6 @@ class MyApp extends StatelessWidget {
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     return new MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'COVID 19 - A Pandemic',
       theme: ThemeData(primaryColor: Colors.black),
       initialRoute: '/',
       onGenerateRoute: RouteGenerator.generatorRoute,

@@ -2,9 +2,10 @@ import 'package:dio/dio.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:covid_19/models/country.dart';
-import 'package:covid_19/components/list_view.dart';
 import 'package:covid_19/components/spinner.dart';
-// import 'package:covid_19/components/empty_list.dart';
+import 'package:covid_19/components/bottom_navigation.dart';
+import 'package:covid_19/components/app_bar.dart';
+import 'package:covid_19/components/search_filter.dart';
 // import 'package:flutter/services.dart';
 
 class HomePage extends StatefulWidget {
@@ -22,21 +23,16 @@ class HomePageRoute extends State<HomePage> {
   List filteredCountryData = new List();
   final dio = new Dio();
 
-  HomePageRoute() {
-    _filter.addListener(() {
-      if (_filter.text.isEmpty) {
-        setState(() {
-          _searchText = "";
-          filteredCountryData = countryData;
-        });
-      } else {
-        setState(() {
-          _searchText = _filter.text;
-        });
-      }
-    });
+  int _selectedBottomNavigationIndex = 0;
+
+  // __init__ method
+  @override
+  void initState() {
+    this._getAllAffectedCountries();
+    super.initState();
   }
 
+  // Method to get data from api
   void _getAllAffectedCountries() async {
     List list = new List();
     final response =
@@ -52,12 +48,7 @@ class HomePageRoute extends State<HomePage> {
     });
   }
 
-  @override
-  void initState() {
-    this._getAllAffectedCountries();
-    super.initState();
-  }
-
+  // Method to handle search in a list to filter data
   void _searchPressed() {
     setState(() {
       if (this._searchIcon.icon == Icons.search) {
@@ -87,39 +78,26 @@ class HomePageRoute extends State<HomePage> {
     });
   }
 
-  Widget _buildAppBar(BuildContext context) {
-    return new AppBar(
-      // centerTitle: true,
-      title: _appBarTitle,
-      // leading: new Icon(Icons.language),
-      actions: <Widget>[
-        Padding(
-          padding: EdgeInsets.only(right: 20.0),
-          child: GestureDetector(
-              child:
-                  new IconButton(icon: _searchIcon, onPressed: _searchPressed)),
-        ),
-        // Padding(
-        //   padding: EdgeInsets.only(right: 20.0),
-        //   child: GestureDetector(child: Icon(Icons.sort)),
-        // )
-      ],
-    );
+  // Handle bottom navigation switch
+  void _handleBottomNavigation(int index) {
+    setState(() {
+      _selectedBottomNavigationIndex = index;
+    });
   }
 
-  Widget _filterList() {
-    if (_searchText.isNotEmpty) {
-      List tempList = new List();
-      for (int i = 0; i < countryData.length; i++) {
-        if ('${countryData[i].country}'
-            .toLowerCase()
-            .contains(_searchText.toLowerCase())) {
-          tempList.add(countryData[i]);
-        }
+  HomePageRoute() {
+    _filter.addListener(() {
+      if (_filter.text.isEmpty) {
+        setState(() {
+          _searchText = "";
+          filteredCountryData = countryData;
+        });
+      } else {
+        setState(() {
+          _searchText = _filter.text;
+        });
       }
-      filteredCountryData = tempList;
-    }
-    return listViewWidget(filteredCountryData);
+    });
   }
 
   Future refreshApp() async {
@@ -129,15 +107,16 @@ class HomePageRoute extends State<HomePage> {
 
   Widget build(BuildContext context) {
     return new Scaffold(
-      appBar: _buildAppBar(context),
+      appBar: appBar(context, _appBarTitle, _searchIcon, _searchPressed),
       body: RefreshIndicator(
         child: Container(
             child: countryData.length != 0
-                ? _filterList()
-                : Container(child: Center(child: Spinner()))
-        ),
+                ? filterOnSearch(_searchText, countryData, filteredCountryData)
+                : Container(child: Center(child: Spinner()))),
         onRefresh: refreshApp,
       ),
+      bottomNavigationBar: bottomNavigation(
+          _selectedBottomNavigationIndex, _handleBottomNavigation),
       resizeToAvoidBottomPadding: false,
     );
   }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:covid_19/components/list_view.dart';
 
 @override
-Widget filterOnSearch(String _searchedText, List primaryData, List filteredData) {
+Widget filterOnSearch(String _searchedText, List primaryData, List filteredData, ScrollController _scrollBottomNavController) {
   if (_searchedText.isNotEmpty) {
       List tempList = new List();
       for (int i = 0; i < primaryData.length; i++) {
@@ -14,5 +14,5 @@ Widget filterOnSearch(String _searchedText, List primaryData, List filteredData)
       }
       filteredData = tempList;
     }
-    return listViewWidget(filteredData);
+    return listViewWidget(filteredData, _scrollBottomNavController);
 }

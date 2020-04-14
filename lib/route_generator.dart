@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import './views/home_page.dart';
+import './views/dashboard.dart';
 import './views/country_page.dart';
 import './views/error_page.dart';
 
@@ -10,7 +10,7 @@ class RouteGenerator {
 
     switch(settings.name) {
       case '/':
-        return MaterialPageRoute(builder: (_) => HomePage());
+        return MaterialPageRoute(builder: (_) => Dashboard());
       case '/country':
         return MaterialPageRoute(builder: (_) => CountryPage(
           data: routingArgs

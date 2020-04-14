@@ -39,13 +39,17 @@ class WorldDataState extends State<WorldData> {
 
   @override
   Widget build(BuildContext context) {
-    return new Container(
-      constraints:
-          BoxConstraints.expand(height: MediaQuery.of(context).size.height),
-      decoration: BoxDecoration(color: Colors.white),
-      child: worldData != null
-          ? worldDataList(context, worldData)
-          : Container(child: Center(child: Spinner())),
-    );
+    return new Scaffold(
+        appBar: AppBar(
+          title: Text('Global Coronavirus Status'),
+        ),
+        body: Container(
+          constraints:
+              BoxConstraints.expand(height: MediaQuery.of(context).size.height),
+          decoration: BoxDecoration(color: Colors.white),
+          child: worldData != null
+              ? worldDataList(context, worldData)
+              : Container(child: Center(child: Spinner())),
+        ));
   }
 }

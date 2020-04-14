@@ -3,12 +3,11 @@ import 'package:flutter/material.dart';
 import './empty_list.dart';
 
 @override
-Widget listViewWidget(country, ScrollController _scrollBottomNavController) {
+Widget listViewWidget(country) {
   return country.length == 0
       ? emptyList("Oops! no matching country found")
       : Container(
           child: ListView.builder(
-            controller: _scrollBottomNavController,
               itemCount: country?.length,
               padding: const EdgeInsets.all(2.0),
               itemBuilder: (BuildContext context, int position) {

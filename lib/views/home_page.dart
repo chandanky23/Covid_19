@@ -6,7 +6,7 @@ import 'package:covid_19/components/spinner.dart';
 import 'package:covid_19/components/bottom_navigation.dart';
 import 'package:covid_19/components/app_bar.dart';
 import 'package:covid_19/components/search_filter.dart';
-import 'package:covid_19/components/world_data.dart';
+import 'package:covid_19/views/world_data.dart';
 import 'package:flutter/rendering.dart';
 
 class HomePage extends StatefulWidget {
@@ -41,11 +41,9 @@ class HomePageRoute extends State<HomePage> {
     List list = new List();
     final response =
         await dio.get('https://covid-19-be-flask.herokuapp.com/stats/all');
-    if (response.statusCode == 200) {
-      var data = response.data;
-      List rest = data as List;
-      list = rest.map<Country>((json) => Country.fromJson(json)).toList();
-    }
+    var data = response.data;
+    List rest = data as List;
+    list = rest.map<Country>((json) => Country.fromJson(json)).toList();
     setState(() {
       countryData = list;
       filteredCountryData = list;
@@ -84,7 +82,6 @@ class HomePageRoute extends State<HomePage> {
 
   // Handle bottom navigation switch
   void _handleBottomNavigation(int index) {
-    print(index);
     setState(() {
       _selectedBottomNavigationIndex = index;
     });
@@ -154,6 +151,19 @@ class HomePageRoute extends State<HomePage> {
     }
   }
 
+  Widget handleAppBarSwitch() {
+    switch (_selectedBottomNavigationIndex) {
+      case 0:
+        return appBar(context, _appBarTitle, _searchIcon, _searchPressed);
+      case 1:
+        return AppBar(
+          title: Text('Global Status'),
+        );
+      default:
+        return appBar(context, _appBarTitle, _searchIcon, _searchPressed);
+    }
+  }
+
   Widget countryDashBoard() {
     return new RefreshIndicator(
       child: Container(
@@ -167,7 +177,7 @@ class HomePageRoute extends State<HomePage> {
 
   Widget build(BuildContext context) {
     return new Scaffold(
-      appBar: appBar(context, _appBarTitle, _searchIcon, _searchPressed),
+      appBar: handleAppBarSwitch(),
       body: handlePageSwitch(),
       bottomNavigationBar: AnimatedContainer(
         duration: Duration(milliseconds: 500),

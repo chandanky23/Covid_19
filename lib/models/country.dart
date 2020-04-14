@@ -1,18 +1,18 @@
 class Country {
-  int active;
-  int cases;
-  int updated;
+  String active;
+  String cases;
+  String updated;
   String country;
   CountryInfo countryInfo;
-  int todayCases;
-  int deaths;
-  int todayDeaths;
-  int recovered;
-  int critical;
-  int casesPerOneMillion;
-  int deathsPerOneMillion;
-  int tests;
-  int testsPerOneMillion;
+  String todayCases;
+  String deaths;
+  String todayDeaths;
+  String recovered;
+  String critical;
+  String casesPerOneMillion;
+  String deathsPerOneMillion;
+  String tests;
+  String testsPerOneMillion;
 
   Country(
     {

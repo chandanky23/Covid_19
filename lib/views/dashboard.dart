@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:covid_19/components/bottom_navigation.dart';
-import './home_page.dart';
+import './all_country_page.dart';
 import './world_data.dart';
 
 class Dashboard extends StatefulWidget {

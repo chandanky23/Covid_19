@@ -1,27 +1,30 @@
 class Province{
-  String iso;
+  String active;
+  String confirmed;
+  String deaths;
   String name;
-  String province;
-  String lat;
-  String long;
-
+  String recovered;
+  String newDeaths;
+  
   Province(
     {
-      this.iso,
+      this.active,
+      this.confirmed,
+      this.deaths,
       this.name,
-      this.province,
-      this.lat,
-      this.long
+      this.recovered,
+      this.newDeaths
     }
   );
 
   factory Province.fromJson(Map<String, dynamic> json) {
     return Province(
-      iso: json['iso'],
+      active: json['active'],
+      confirmed: json['confirmed'],
+      deaths: json['deaths'],
       name: json['name'],
-      province: json['province'],
-      lat: json['lat'],
-      long: json['long']
+      recovered: json['recovered'],
+      newDeaths: json['newDeaths']
     );
   }
 }

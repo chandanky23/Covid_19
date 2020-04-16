@@ -1,10 +1,11 @@
+import 'package:covid_19/route_generator.dart';
 import 'package:dio/dio.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:covid_19/models/country.dart';
 import 'package:covid_19/components/spinner.dart';
 import 'package:covid_19/components/app_bar.dart';
-import 'package:covid_19/components/search_filter.dart';
+import 'package:covid_19/components/search_filter_country.dart';
 import 'package:flutter/rendering.dart';
 
 class WorldDashboard extends StatefulWidget {
@@ -73,6 +74,14 @@ class WorldDashboardRoute extends State<WorldDashboard> {
     });
   }
 
+  void handleCardTap(data) {
+    Navigator.pushNamed(context, '/country',
+        arguments: ScreenArguments(
+            country: data.country,
+            iso: data.countryInfo.iso2,
+            flag: data.countryInfo.flag));
+  }
+
   WorldDashboardRoute() {
     _filter.addListener(() {
       if (_filter.text.isEmpty) {
@@ -93,12 +102,12 @@ class WorldDashboardRoute extends State<WorldDashboard> {
     _getAllAffectedCountries();
   }
 
-
   Widget countryDashBoard() {
     return new RefreshIndicator(
       child: Container(
           child: countryData.length != 0
-              ? filterOnSearch(_searchText, countryData, filteredCountryData)
+              ? filterOnSearch(
+                  _searchText, countryData, filteredCountryData, handleCardTap)
               : Container(child: Center(child: Spinner()))),
       onRefresh: refreshApp,
     );
@@ -107,7 +116,6 @@ class WorldDashboardRoute extends State<WorldDashboard> {
   Widget build(BuildContext context) {
     return new Scaffold(
         appBar: appBar(context, _appBarTitle, _searchIcon, _searchPressed),
-        body: countryDashBoard()
-        );
+        body: countryDashBoard());
   }
 }

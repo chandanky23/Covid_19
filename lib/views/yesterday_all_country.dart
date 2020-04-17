@@ -8,15 +8,14 @@ import 'package:covid_19/components/app_bar.dart';
 import 'package:covid_19/components/search_filter_country.dart';
 import 'package:flutter/rendering.dart';
 
-class WorldDashboard extends StatefulWidget {
-  WorldDashboard({Key key}) : super(key: key);
+class WorldDashboardYesterday extends StatefulWidget {
+  WorldDashboardYesterday({Key key}) : super(key: key);
   @override
-  WorldDashboardRoute createState() => WorldDashboardRoute();
+  WorldDashboardYesterdayRoute createState() => WorldDashboardYesterdayRoute();
 }
 
-class WorldDashboardRoute extends State<WorldDashboard> {
-  Widget _appBarTitle = new Text('Latest Coronavirus Status',
-      style: TextStyle(fontSize: 18.0));
+class WorldDashboardYesterdayRoute extends State<WorldDashboardYesterday> {
+  Widget _appBarTitle = new Text("Yesterday's Coronavirus Status", style: TextStyle(fontSize: 18.0));
   Icon _searchIcon = new Icon(Icons.search);
   final TextEditingController _filter = new TextEditingController();
   List countryData = new List();
@@ -37,9 +36,8 @@ class WorldDashboardRoute extends State<WorldDashboard> {
   void _getAllAffectedCountries() async {
     List list = new List();
     try {
-      final response = await dio.get(
-          'https://covid-19-be-flask.herokuapp.com/stats/all',
-          queryParameters: {"sort": "cases", "yesterday": false});
+      final response = await dio.get('https://covid-19-be-flask.herokuapp.com/stats/all',
+          queryParameters: {"sort": "cases", "yesterday": true});
       if (response.statusCode == 200) {
         var data = response.data;
         List rest = data as List;
@@ -87,10 +85,7 @@ class WorldDashboardRoute extends State<WorldDashboard> {
         );
       } else {
         this._searchIcon = new Icon(Icons.search);
-        this._appBarTitle = new Text(
-          'Latest Coronavirus Status',
-          style: TextStyle(fontSize: 18.0),
-        );
+        this._appBarTitle = new Text("Yesterday's Coronavirus Status", style: TextStyle(fontSize: 18.0));
         filteredCountryData = countryData;
         _filter.clear();
       }
@@ -105,7 +100,7 @@ class WorldDashboardRoute extends State<WorldDashboard> {
             flag: data.countryInfo.flag));
   }
 
-  WorldDashboardRoute() {
+  WorldDashboardYesterdayRoute() {
     _filter.addListener(() {
       if (_filter.text.isEmpty) {
         setState(() {

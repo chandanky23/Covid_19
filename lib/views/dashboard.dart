@@ -1,3 +1,4 @@
+import 'package:covid_19/views/yesterday_all_country.dart';
 import 'package:flutter/material.dart';
 import 'package:covid_19/components/bottom_navigation.dart';
 import './all_country_page.dart';
@@ -16,6 +17,7 @@ class DashboardSate extends State<Dashboard> {
   int _selectedBottomNavigationIndex = 0;
   List _children = [
     WorldDashboard(),
+    WorldDashboardYesterday(),
     WorldData()
   ];
 

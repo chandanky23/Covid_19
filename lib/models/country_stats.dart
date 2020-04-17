@@ -1,10 +1,10 @@
 class CountryStats {
   String day;
-  int val;
+  int value;
 
-  CountryStats({this.day, this.val});
+  CountryStats({this.day, this.value});
 
-  factory CountryStats.fromJson(Map<String, dynamic> json) {
-    return CountryStats(day: json['day'], val: json['val']);
+  factory CountryStats.fromJson(Map<dynamic, dynamic> json) {
+    return CountryStats(day: json['day'], value: json['value']);
   }
 }

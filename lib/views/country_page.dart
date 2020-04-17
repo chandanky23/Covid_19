@@ -34,13 +34,8 @@ class CountryDashboardRoute extends State<CountryDashboard> {
   final dio = new Dio();
   bool _showSpinner = false;
 
-  List activeStatsData = new List();
-  List criticalStatsData = new List();
-  List deathsStatsData = new List();
-  List newDeathsStatsData = new List();
-  List newCasesStatsData = new List();
-  List recoveredStatsData = new List();
-  List totalStatsData = new List();
+  List chartData = new List();
+  List chartDataName = new List();
 
   // __init__ method
   @override
@@ -86,59 +81,63 @@ class CountryDashboardRoute extends State<CountryDashboard> {
     List newCasesList = new List();
     List recoveredList = new List();
     List totalList = new List();
+
     final response = await dio.get(
         'https://covid-19-be-flask.herokuapp.com/stats/country/history',
         queryParameters: {'country': widget.country});
     if (response.statusCode == 200) {
       // List data = response.data as List;
-      // list = data.map<CountryStats>((json) => CountryStats.fromJson(json)).toList();
+      //   activeList = data['active'].map<CountryStats>((json) => CountryStats.fromJson(json)).toList();
+      // }
       var data = response.data;
-      for (int i = 0; i < data.length; i++) {
-        if (data[i] == 'active') {
-          activeList = data[i]
-              .map<CountryStats>((json) => CountryStats.fromJson(json))
-              .toList();
-        }
-        if (data[i] == 'critical') {
-          criticalList = data[i]
-              .map<CountryStats>((json) => CountryStats.fromJson(json))
-              .toList();
-        }
-        if (data[i] == 'deaths') {
-          deathsList = data[i]
-              .map<CountryStats>((json) => CountryStats.fromJson(json))
-              .toList();
-        }
-        if (data[i] == 'newDeaths') {
-          newDeathsList = data[i]
-              .map<CountryStats>((json) => CountryStats.fromJson(json))
-              .toList();
-        }
-        if (data[i] == 'newCases') {
-          newCasesList = data[i]
-              .map<CountryStats>((json) => CountryStats.fromJson(json))
-              .toList();
-        }
-        if (data[i] == 'recovered') {
-          recoveredList = data[i]
-              .map<CountryStats>((json) => CountryStats.fromJson(json))
-              .toList();
-        }
-        if (data[i] == 'total') {
-          totalList = data[i]
-              .map<CountryStats>((json) => CountryStats.fromJson(json))
-              .toList();
-        }
-      }
+      var activeData = data['active'] as List;
+      var deathsData = data['deaths'] as List;
+      var newDeathsData = data['newDeaths'] as List;
+      var newCasesData = data['newCases'] as List;
+      var recoveredData = data['recovered'] as List;
+      var totalData = data['total'] as List;
+      var criticalData = data['critical'] as List;
+      activeList = activeData
+          .map<CountryStats>((json) => CountryStats.fromJson((json)))
+          .toList();
+      deathsList = deathsData
+          .map<CountryStats>((json) => CountryStats.fromJson((json)))
+          .toList();
+      newDeathsList = newDeathsData
+          .map<CountryStats>((json) => CountryStats.fromJson((json)))
+          .toList();
+      newCasesList = newCasesData
+          .map<CountryStats>((json) => CountryStats.fromJson((json)))
+          .toList();
+      recoveredList = recoveredData
+          .map<CountryStats>((json) => CountryStats.fromJson((json)))
+          .toList();
+      totalList = totalData
+          .map<CountryStats>((json) => CountryStats.fromJson((json)))
+          .toList();
+      criticalList = criticalData
+          .map<CountryStats>((json) => CountryStats.fromJson((json)))
+          .toList();
     }
     setState(() {
-      activeStatsData = activeList;
-      criticalStatsData = criticalList;
-      newDeathsStatsData = newDeathsList;
-      newCasesList = newCasesList;
-      deathsStatsData = deathsList;
-      recoveredStatsData = recoveredList;
-      totalStatsData = totalList;
+      chartData = [
+        totalList,
+        deathsList,
+        recoveredList,
+        newCasesList,
+        newDeathsList,
+        activeList,
+        criticalList
+      ];
+      chartDataName = [
+        'Total cases',
+        'Total Deaths',
+        'Total Recovery',
+        'New Cases',
+        'New Deaths',
+        'Active Cases',
+        'Critical Cases'
+      ];
     });
   }
 
@@ -207,8 +206,12 @@ class CountryDashboardRoute extends State<CountryDashboard> {
         child: Container(
             child: provineData.length > 0
                 ? filterOnSearch(_searchText, provineData, filteredprovineData)
-                : countryStats(context, Axis.vertical,
-                    MediaQuery.of(context).size.height, activeStatsData)),
+                : ShowCountryStatistics(
+                    chartData: chartData,
+                    chartDataName: chartDataName,
+                    scrollDirection: Axis.vertical,
+                    height: MediaQuery.of(context).size.height,
+                  )),
         onRefresh: refreshApp,
       );
     }
@@ -219,7 +222,7 @@ class CountryDashboardRoute extends State<CountryDashboard> {
         context: context,
         builder: (builder) {
           return new Container(
-              height: MediaQuery.of(context).size.height * 0.5,
+              height: MediaQuery.of(context).size.height * 0.6,
               color: Colors.black,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -228,8 +231,12 @@ class CountryDashboardRoute extends State<CountryDashboard> {
                     'Statistics',
                     style: TextStyle(color: Colors.white, fontSize: 20.0),
                   ),
-                  countryStats(context, Axis.horizontal,
-                      MediaQuery.of(context).size.height * .4, activeStatsData)
+                  ShowCountryStatistics(
+                    chartData: chartData,
+                    chartDataName: chartDataName,
+                    scrollDirection: Axis.horizontal,
+                    height: MediaQuery.of(context).size.height * .4,
+                  )
                 ],
               ));
         });

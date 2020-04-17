@@ -9,7 +9,8 @@ Widget bottomNavigation(int _selectedIndex, _handleNavItemTap) {
     ),
     child: BottomNavigationBar(
       items: const <BottomNavigationBarItem>[
-        BottomNavigationBarItem(icon: Icon(Icons.dashboard), title: Text('Dashboard')),
+        BottomNavigationBarItem(icon: Icon(Icons.dashboard), title: Text('Today')),
+        BottomNavigationBarItem(icon: Icon(Icons.history), title: Text('Yesterday')),
         BottomNavigationBarItem(icon: Icon(Icons.public), title: Text('Global'))
       ],
       currentIndex: _selectedIndex,

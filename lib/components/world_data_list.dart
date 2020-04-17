@@ -3,7 +3,6 @@ import 'package:covid_19/models/world_data.dart';
 
 @override
 Widget worldDataList(BuildContext context, World worldData) {
-  print(worldData);
   return new Container(
     margin: EdgeInsets.fromLTRB(20.0, 40.0, 20.0, 40.0),
     height: MediaQuery.of(context).size.height,

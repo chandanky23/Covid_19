@@ -22,6 +22,8 @@ class WorldDashboardRoute extends State<WorldDashboard> {
   String _searchText = "";
   List filteredCountryData = new List();
   final dio = new Dio();
+  bool _spinner = true;
+  String _error = '';
 
   // __init__ method
   @override
@@ -33,15 +35,31 @@ class WorldDashboardRoute extends State<WorldDashboard> {
   // Method to get data from api
   void _getAllAffectedCountries() async {
     List list = new List();
-    final response =
-        await dio.get('https://covid-19-be-flask.herokuapp.com/stats/all');
-    var data = response.data;
-    List rest = data as List;
-    list = rest.map<Country>((json) => Country.fromJson(json)).toList();
-    setState(() {
-      countryData = list;
-      filteredCountryData = list;
-    });
+    try {
+      final response =
+          await dio.get('https://covid-19-be-flask.herokuapp.com/stats/all');
+      if (response.statusCode == 200) {
+        var data = response.data;
+        List rest = data as List;
+        list = rest.map<Country>((json) => Country.fromJson(json)).toList();
+      }
+      setState(() {
+        countryData = list;
+        filteredCountryData = list;
+        _spinner = false;
+        _error = '';
+      });
+    } catch (e) {
+      if (e is DioError) {
+        _spinner = false;
+        _error = 'Something happened. Please reload.';
+      } else {
+        setState(() {
+          _error = 'Server is down. Please try after sometime';
+          _spinner = false;
+        });
+      }
+    }
   }
 
   // Method to handle search in a list to filter data
@@ -103,12 +121,30 @@ class WorldDashboardRoute extends State<WorldDashboard> {
   }
 
   Widget countryDashBoard() {
+    if (_spinner) {
+      return Container(child: Center(child: Spinner()));
+    }
+    if (_error != '') {
+      return Container(
+          child: Center(
+              child: Column(
+        children: <Widget>[
+          Text(
+            _error,
+            style: TextStyle(color: Colors.red),
+          )
+        ],
+      )));
+    }
     return new RefreshIndicator(
       child: Container(
           child: countryData.length != 0
               ? filterOnSearch(
                   _searchText, countryData, filteredCountryData, handleCardTap)
-              : Container(child: Center(child: Spinner()))),
+              : Text(
+                  'No data found',
+                  style: TextStyle(color: Colors.red),
+                )),
       onRefresh: refreshApp,
     );
   }

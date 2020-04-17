@@ -1,4 +1,6 @@
+import 'package:covid_19/components/country_stats.dart';
 import 'package:covid_19/components/image_thumbnail.dart';
+import 'package:covid_19/models/country_stats.dart';
 import 'package:dio/dio.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
@@ -30,12 +32,24 @@ class CountryDashboardRoute extends State<CountryDashboard> {
   String _searchText = "";
   List filteredprovineData = new List();
   final dio = new Dio();
+  bool _showSpinner = false;
+
+  List activeStatsData = new List();
+  List criticalStatsData = new List();
+  List deathsStatsData = new List();
+  List newDeathsStatsData = new List();
+  List newCasesStatsData = new List();
+  List recoveredStatsData = new List();
+  List totalStatsData = new List();
 
   // __init__ method
   @override
   void initState() {
-    print(widget);
     this._getAffectedCountryData();
+    this._getStatsOfCountry();
+    setState(() {
+      _showSpinner = true;
+    });
     super.initState();
     this._appBarTitle = Row(
       children: <Widget>[
@@ -50,30 +64,82 @@ class CountryDashboardRoute extends State<CountryDashboard> {
   void _getAffectedCountryData() async {
     List list = new List();
     final response = await dio.get(
-      'https://covid-19-be-flask.herokuapp.com/stats/country/data',
-      queryParameters: {'country': widget.country}
-    );
+        'https://covid-19-be-flask.herokuapp.com/stats/country/data',
+        queryParameters: {'country': widget.country});
     if (response.statusCode == 200) {
       var data = response.data;
       List rest = data as List;
       list = rest.map<Province>((json) => Province.fromJson(json)).toList();
+      setState(() {
+        provineData = list;
+        filteredprovineData = list;
+        _showSpinner = false;
+      });
     }
-    setState(() {
-      provineData = list;
-      filteredprovineData = list;
-    });
   }
 
   void _getStatsOfCountry() async {
-    List list = new List();
+    List activeList = new List();
+    List criticalList = new List();
+    List deathsList = new List();
+    List newDeathsList = new List();
+    List newCasesList = new List();
+    List recoveredList = new List();
+    List totalList = new List();
     final response = await dio.get(
-      'https://covid-19-be-flask.herokuapp.com/stats/country/history',
-      queryParameters: {'country': widget.country}
-    );
-    // if(response.statusCode == 200) {
-    //   List data = response.data as List;
-    //   list = rest.map<>
-    // }
+        'https://covid-19-be-flask.herokuapp.com/stats/country/history',
+        queryParameters: {'country': widget.country});
+    if (response.statusCode == 200) {
+      // List data = response.data as List;
+      // list = data.map<CountryStats>((json) => CountryStats.fromJson(json)).toList();
+      var data = response.data;
+      for (int i = 0; i < data.length; i++) {
+        if (data[i] == 'active') {
+          activeList = data[i]
+              .map<CountryStats>((json) => CountryStats.fromJson(json))
+              .toList();
+        }
+        if (data[i] == 'critical') {
+          criticalList = data[i]
+              .map<CountryStats>((json) => CountryStats.fromJson(json))
+              .toList();
+        }
+        if (data[i] == 'deaths') {
+          deathsList = data[i]
+              .map<CountryStats>((json) => CountryStats.fromJson(json))
+              .toList();
+        }
+        if (data[i] == 'newDeaths') {
+          newDeathsList = data[i]
+              .map<CountryStats>((json) => CountryStats.fromJson(json))
+              .toList();
+        }
+        if (data[i] == 'newCases') {
+          newCasesList = data[i]
+              .map<CountryStats>((json) => CountryStats.fromJson(json))
+              .toList();
+        }
+        if (data[i] == 'recovered') {
+          recoveredList = data[i]
+              .map<CountryStats>((json) => CountryStats.fromJson(json))
+              .toList();
+        }
+        if (data[i] == 'total') {
+          totalList = data[i]
+              .map<CountryStats>((json) => CountryStats.fromJson(json))
+              .toList();
+        }
+      }
+    }
+    setState(() {
+      activeStatsData = activeList;
+      criticalStatsData = criticalList;
+      newDeathsStatsData = newDeathsList;
+      newCasesList = newCasesList;
+      deathsStatsData = deathsList;
+      recoveredStatsData = recoveredList;
+      totalStatsData = totalList;
+    });
   }
 
   // Method to handle search in a list to filter data
@@ -112,12 +178,6 @@ class CountryDashboardRoute extends State<CountryDashboard> {
     });
   }
 
-  void handleCardTap(data) {
-    // if(data.toLowerCase() == 'india') {
-    //   print(data);
-    // }
-  }
-
   CountryDashboardRoute() {
     _filter.addListener(() {
       if (_filter.text.isEmpty) {
@@ -140,13 +200,18 @@ class CountryDashboardRoute extends State<CountryDashboard> {
   }
 
   Widget countryDashBoard() {
-    return new RefreshIndicator(
-      child: Container(
-          child: provineData.length != 0
-              ? filterOnSearch(_searchText, provineData, filteredprovineData)
-              : Container(child: Center(child: Spinner()))),
-      onRefresh: refreshApp,
-    );
+    if (_showSpinner) {
+      return Container(child: Center(child: Spinner()));
+    } else {
+      return new RefreshIndicator(
+        child: Container(
+            child: provineData.length > 0
+                ? filterOnSearch(_searchText, provineData, filteredprovineData)
+                : countryStats(context, Axis.vertical,
+                    MediaQuery.of(context).size.height, activeStatsData)),
+        onRefresh: refreshApp,
+      );
+    }
   }
 
   void _showBottomStatsSheet() {
@@ -154,25 +219,38 @@ class CountryDashboardRoute extends State<CountryDashboard> {
         context: context,
         builder: (builder) {
           return new Container(
-            color: Colors.black,
-            child: new Center(
-              child: Text('heelo'),
-            ),
-          );
+              height: MediaQuery.of(context).size.height * 0.5,
+              color: Colors.black,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Text(
+                    'Statistics',
+                    style: TextStyle(color: Colors.white, fontSize: 20.0),
+                  ),
+                  countryStats(context, Axis.horizontal,
+                      MediaQuery.of(context).size.height * .4, activeStatsData)
+                ],
+              ));
         });
   }
 
   Widget build(BuildContext context) {
     return new Scaffold(
-      appBar: appBar(context, _appBarTitle, _searchIcon, _searchPressed),
-      body: countryDashBoard(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _showBottomStatsSheet();
-        },
-        child: new Text('Stats'),
-        backgroundColor: Colors.black,
-      ),
-    );
+        appBar: provineData.length > 0
+            ? appBar(context, _appBarTitle, _searchIcon, _searchPressed)
+            : AppBar(
+                title: _appBarTitle,
+              ),
+        body: countryDashBoard(),
+        floatingActionButton: provineData.length > 0
+            ? FloatingActionButton(
+                onPressed: () {
+                  _showBottomStatsSheet();
+                },
+                child: new Text('Stats'),
+                backgroundColor: Colors.black,
+              )
+            : null);
   }
 }

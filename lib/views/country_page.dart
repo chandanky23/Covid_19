@@ -251,13 +251,16 @@ class CountryDashboardRoute extends State<CountryDashboard> {
               ),
         body: countryDashBoard(),
         floatingActionButton: provineData.length > 0
-            ? FloatingActionButton(
+            ? Container(
+                margin: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 60.0),
+                child: FloatingActionButton(
                 onPressed: () {
                   _showBottomStatsSheet();
                 },
                 child: new Text('Stats'),
                 backgroundColor: Colors.black,
-              )
+                foregroundColor: Colors.white,
+              ))
             : null);
   }
 }

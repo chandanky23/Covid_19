@@ -10,13 +10,18 @@ class RouteGenerator {
 
     switch (settings.name) {
       case '/':
-        return MaterialPageRoute(builder: (_) => Dashboard());
+        return MaterialPageRoute(
+            builder: (_) => Dashboard(),
+            settings: RouteSettings(name: 'Landing page'));
       case '/country':
         return MaterialPageRoute(
             builder: (_) => CountryDashboard(
-                country: args.country, iso: args.iso, flag: args.flag));
+                country: args.country, iso: args.iso, flag: args.flag),
+            settings: RouteSettings(name: 'Country page'));
       default:
-        return MaterialPageRoute(builder: (_) => ErrorPage());
+        return MaterialPageRoute(
+            builder: (_) => ErrorPage(),
+            settings: RouteSettings(name: 'Error page'));
     }
   }
 }

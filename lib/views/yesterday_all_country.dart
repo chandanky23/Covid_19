@@ -1,4 +1,5 @@
 import 'package:covid_19/route_generator.dart';
+import 'package:covid_19/services/firebase_analytics.dart';
 import 'package:dio/dio.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
@@ -25,11 +26,15 @@ class WorldDashboardYesterdayRoute extends State<WorldDashboardYesterday> {
   bool _spinner = true;
   String _error = '';
 
+  // Firebase analytics
+  final AnalyticsService _analyticsService = AnalyticsService();
+
   // __init__ method
   @override
   void initState() {
     this._getAllAffectedCountries();
     super.initState();
+    _analyticsService.getCurrentPage(page: 'Yesterday', pageToOverride: 'WorldDashboardYesterday');
   }
 
   // Method to get data from api

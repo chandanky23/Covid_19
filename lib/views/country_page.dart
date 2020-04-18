@@ -1,6 +1,7 @@
 import 'package:covid_19/components/country_stats.dart';
 import 'package:covid_19/components/image_thumbnail.dart';
 import 'package:covid_19/models/country_stats.dart';
+import 'package:covid_19/services/firebase_analytics.dart';
 import 'package:dio/dio.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
@@ -37,6 +38,9 @@ class CountryDashboardRoute extends State<CountryDashboard> {
   List chartData = new List();
   List chartDataName = new List();
 
+  // Analytics
+  final AnalyticsService _analyticsService = AnalyticsService();
+
   // __init__ method
   @override
   void initState() {
@@ -53,6 +57,8 @@ class CountryDashboardRoute extends State<CountryDashboard> {
         Text(widget.country)
       ],
     );
+    _analyticsService.getCurrentPage(
+        page: widget.country, pageToOverride: 'CountryDashboard');
   }
 
   // Method to get data from api
@@ -254,13 +260,13 @@ class CountryDashboardRoute extends State<CountryDashboard> {
             ? Container(
                 margin: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 60.0),
                 child: FloatingActionButton(
-                onPressed: () {
-                  _showBottomStatsSheet();
-                },
-                child: new Text('Stats'),
-                backgroundColor: Colors.black,
-                foregroundColor: Colors.white,
-              ))
+                  onPressed: () {
+                    _showBottomStatsSheet();
+                  },
+                  child: new Text('Stats'),
+                  backgroundColor: Colors.black,
+                  foregroundColor: Colors.white,
+                ))
             : null);
   }
 }

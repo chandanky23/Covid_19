@@ -1,5 +1,6 @@
 import 'package:covid_19/components/spinner.dart';
 import 'package:covid_19/models/world_data.dart';
+import 'package:covid_19/services/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:covid_19/components/world_data_list.dart';
@@ -14,6 +15,9 @@ class WorldData extends StatefulWidget {
 
 class WorldDataState extends State<WorldData> {
   final dio = new Dio();
+
+  // Firebase Analytics
+  final AnalyticsService _analyticsService = AnalyticsService();
 
   World worldData;
 
@@ -35,6 +39,7 @@ class WorldDataState extends State<WorldData> {
   void initState() {
     super.initState();
     this.getGlobalData();
+    _analyticsService.getCurrentPage(page: 'Global Total Page', pageToOverride: 'WorldData');
   }
 
   @override

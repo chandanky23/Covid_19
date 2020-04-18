@@ -1,4 +1,5 @@
 import 'package:covid_19/route_generator.dart';
+import 'package:covid_19/services/firebase_analytics.dart';
 import 'package:dio/dio.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
@@ -15,8 +16,8 @@ class WorldDashboard extends StatefulWidget {
 }
 
 class WorldDashboardRoute extends State<WorldDashboard> {
-  Widget _appBarTitle = new Text('Latest Coronavirus Status',
-      style: TextStyle(fontSize: 18.0));
+  Widget _appBarTitle =
+      new Text('Latest Coronavirus Status', style: TextStyle(fontSize: 18.0));
   Icon _searchIcon = new Icon(Icons.search);
   final TextEditingController _filter = new TextEditingController();
   List countryData = new List();
@@ -26,11 +27,17 @@ class WorldDashboardRoute extends State<WorldDashboard> {
   bool _spinner = true;
   String _error = '';
 
+  // Firebase Analytics
+  final AnalyticsService _analyticsService = AnalyticsService();
+
   // __init__ method
   @override
   void initState() {
     this._getAllAffectedCountries();
     super.initState();
+    _analyticsService.getCurrentPage(
+        page: 'Landing page (world wide current data)',
+        pageToOverride: 'WorldDashboard');
   }
 
   // Method to get data from api

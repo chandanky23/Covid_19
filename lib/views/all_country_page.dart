@@ -1,4 +1,5 @@
 import 'package:covid_19/route_generator.dart';
+import 'package:covid_19/services/ads.dart';
 import 'package:covid_19/services/firebase_analytics.dart';
 import 'package:dio/dio.dart';
 import 'dart:async';
@@ -38,6 +39,7 @@ class WorldDashboardRoute extends State<WorldDashboard> {
     _analyticsService.getCurrentPage(
         page: 'Landing page (world wide current data)',
         pageToOverride: 'WorldDashboard');
+    Ads.showBannerAd(this);
   }
 
   // Method to get data from api

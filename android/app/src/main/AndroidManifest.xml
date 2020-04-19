@@ -10,6 +10,9 @@
         android:name="io.flutter.app.FlutterApplication"
         android:label="Cov19 Stats"
         android:icon="@mipmap/ic_launcher">
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-5369694228287577~8362379320"/>
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

@@ -1,4 +1,5 @@
 import 'package:covid_19/route_generator.dart';
+import 'package:covid_19/services/ads.dart';
 import 'package:covid_19/services/firebase_analytics.dart';
 import 'package:dio/dio.dart';
 import 'dart:async';
@@ -16,7 +17,8 @@ class WorldDashboardYesterday extends StatefulWidget {
 }
 
 class WorldDashboardYesterdayRoute extends State<WorldDashboardYesterday> {
-  Widget _appBarTitle = new Text("Yesterday's Coronavirus Status", style: TextStyle(fontSize: 18.0));
+  Widget _appBarTitle = new Text("Yesterday's Coronavirus Status",
+      style: TextStyle(fontSize: 18.0));
   Icon _searchIcon = new Icon(Icons.search);
   final TextEditingController _filter = new TextEditingController();
   List countryData = new List();
@@ -34,14 +36,17 @@ class WorldDashboardYesterdayRoute extends State<WorldDashboardYesterday> {
   void initState() {
     this._getAllAffectedCountries();
     super.initState();
-    _analyticsService.getCurrentPage(page: 'Yesterday', pageToOverride: 'WorldDashboardYesterday');
+    _analyticsService.getCurrentPage(
+        page: 'Yesterday', pageToOverride: 'WorldDashboardYesterday');
+    Ads.showBannerAd(this);
   }
 
   // Method to get data from api
   void _getAllAffectedCountries() async {
     List list = new List();
     try {
-      final response = await dio.get('https://covid-19-be-flask.herokuapp.com/stats/all',
+      final response = await dio.get(
+          'https://covid-19-be-flask.herokuapp.com/stats/all',
           queryParameters: {"sort": "cases", "yesterday": true});
       if (response.statusCode == 200) {
         var data = response.data;
@@ -90,7 +95,8 @@ class WorldDashboardYesterdayRoute extends State<WorldDashboardYesterday> {
         );
       } else {
         this._searchIcon = new Icon(Icons.search);
-        this._appBarTitle = new Text("Yesterday's Coronavirus Status", style: TextStyle(fontSize: 18.0));
+        this._appBarTitle = new Text("Yesterday's Coronavirus Status",
+            style: TextStyle(fontSize: 18.0));
         filteredCountryData = countryData;
         _filter.clear();
       }

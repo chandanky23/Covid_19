@@ -6,7 +6,6 @@ import './route_generator.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-
   // Root of the application
   @override
   Widget build(BuildContext context) {
@@ -14,7 +13,9 @@ class MyApp extends StatelessWidget {
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     return new MaterialApp(
       debugShowCheckedModeBanner: false,
-      navigatorObservers: <NavigatorObserver>[AnalyticsService().getAnalyticsObserver()],
+      navigatorObservers: <NavigatorObserver>[
+        AnalyticsService().getAnalyticsObserver()
+      ],
       theme: ThemeData(primaryColor: Colors.black),
       initialRoute: '/',
       onGenerateRoute: RouteGenerator.generatorRoute,

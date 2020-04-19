@@ -1,6 +1,7 @@
 import 'package:covid_19/components/country_stats.dart';
 import 'package:covid_19/components/image_thumbnail.dart';
 import 'package:covid_19/models/country_stats.dart';
+import 'package:covid_19/services/ads.dart';
 import 'package:covid_19/services/firebase_analytics.dart';
 import 'package:dio/dio.dart';
 import 'dart:async';
@@ -59,6 +60,7 @@ class CountryDashboardRoute extends State<CountryDashboard> {
     );
     _analyticsService.getCurrentPage(
         page: widget.country, pageToOverride: 'CountryDashboard');
+    Ads.hideBannerAd();
   }
 
   // Method to get data from api
@@ -261,6 +263,7 @@ class CountryDashboardRoute extends State<CountryDashboard> {
                 margin: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 60.0),
                 child: FloatingActionButton(
                   onPressed: () {
+                    Ads.showIntertitialAd();
                     _showBottomStatsSheet();
                   },
                   child: new Text('Stats'),

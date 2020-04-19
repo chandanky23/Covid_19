@@ -1,5 +1,6 @@
 import 'package:covid_19/components/spinner.dart';
 import 'package:covid_19/models/world_data.dart';
+import 'package:covid_19/services/ads.dart';
 import 'package:covid_19/services/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
@@ -39,7 +40,9 @@ class WorldDataState extends State<WorldData> {
   void initState() {
     super.initState();
     this.getGlobalData();
-    _analyticsService.getCurrentPage(page: 'Global Total Page', pageToOverride: 'WorldData');
+    _analyticsService.getCurrentPage(
+        page: 'Global Total Page', pageToOverride: 'WorldData');
+    Ads.showBannerAd(this);
   }
 
   @override

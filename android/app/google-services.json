@@ -8,17 +8,17 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:130878062861:android:724067775dbfa5db233044",
+        "mobilesdk_app_id": "1:130878062861:android:ad4adf139583a17d233044",
         "android_client_info": {
-          "package_name": "com.example.covid_19"
+          "package_name": "covid19.updates"
         }
       },
       "oauth_client": [
         {
-          "client_id": "130878062861-gl1ldn2hkj07kh94ktokpa08nojsen0b.apps.googleusercontent.com",
+          "client_id": "130878062861-e5cso995lcuhohr4f54jus6o22jcph3a.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.covid_19",
+            "package_name": "covid19.updates",
             "certificate_hash": "cd40fbbef1f69bafafb927b0e55b607393e0956e"
           }
         },
